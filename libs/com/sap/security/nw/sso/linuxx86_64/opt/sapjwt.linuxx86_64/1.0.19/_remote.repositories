@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Apr 10 10:00:52 CST 2020
+sapjwt.linuxx86_64-1.0.19.jar>=
+sapjwt.linuxx86_64-1.0.19.pom>=

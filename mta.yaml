@@ -1,0 +1,149 @@
+ID: Workflow_OrgChart
+_schema-version: '2.1'
+parameters:
+  deploy_mode: html5-repo
+version: 0.2.13
+modules:
+  - name: workflow-orgchart-approuter
+    type: approuter.nodejs
+    path: workflow-orgchart-approuter
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: Workflow_OrgChart_html5_repo_runtime
+      - name: Workflow_OrgChart-uaa
+      - name: Workflow_OrgChart_CFDest
+      - name: portal_resources_Workflow_OrgChart
+      - name: srv_api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          name: srv_api
+          url: '~{url}'
+  - name: Workflow_OrgChart_ui_deployer
+    type: com.sap.html5.application-content
+    path: Workflow_OrgChart_ui_deployer
+    requires:
+      - name: Workflow_OrgChart_html5_repo_host
+    build-parameters:
+      requires:
+        - name: MaintainCountry
+          artifacts:
+            - './*'
+          target-path: resources/MaintainCountry
+        - name: MaintainDepartment
+          artifacts:
+            - './*'
+          target-path: resources/MaintainDepartment
+        - name: MaintainEmployee
+          artifacts:
+            - './*'
+          target-path: resources/MaintainEmployee
+  - name: Workflow_OrgChart-db
+    type: hdb
+    path: db
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+    requires:
+      - name: Workflow_OrgChart-db-hdi-container
+  - name: Workflow_OrgChart-srv
+    type: java
+    path: srv
+    parameters:
+      memory: 1024M
+    provides:
+      - name: srv_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: Workflow_OrgChart-db-hdi-container
+        properties:
+          JBP_CONFIG_RESOURCE_CONFIGURATION: '[tomcat/webapps/ROOT/META-INF/context.xml: {"service_name_for_DefaultDB" : "~{hdi-container-name}"}]'
+      - name: Workflow_OrgChart-uaa
+  - name: MaintainCountry
+    type: html5
+    path: MaintainCountry
+    build-parameters:
+      builder: grunt
+      supported-platforms: []
+      build-result: dist
+    requires:
+      - name: Workflow_OrgChart_CFDest
+  - name: WorkflowOrgChart_FLP
+    type: com.sap.portal.content
+    path: WorkflowOrgChart_FLP
+    parameters:
+      stack: cflinuxfs3
+      memory: 128M
+      buildpack: 'https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.6.39/nodejs-buildpack-cflinuxfs3-v1.6.39.zip'
+    requires:
+      - name: portal_resources_Workflow_OrgChart
+      - name: Workflow_OrgChart-uaa
+      - name: Workflow_OrgChart_html5_repo_host
+      - name: Workflow_OrgChart_ui_deployer
+  - name: MaintainDepartment
+    type: html5
+    path: MaintainDepartment
+    build-parameters:
+      builder: grunt
+      supported-platforms: []
+      build-result: dist
+    requires:
+      - name: srv_api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          strictSSL: false
+          name: srv_api
+          url: '~{url}'
+  - name: MaintainEmployee
+    type: html5
+    path: MaintainEmployee
+    build-parameters:
+      builder: grunt
+      supported-platforms: []
+      build-result: dist
+    requires:
+      - name: srv_api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          strictSSL: false
+          name: srv_api
+          url: '~{url}'
+resources:
+  - name: Workflow_OrgChart_html5_repo_runtime
+    parameters:
+      service-plan: app-runtime
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: Workflow_OrgChart_html5_repo_host
+    parameters:
+      service-plan: app-host
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: Workflow_OrgChart-db-hdi-container
+    type: com.sap.xs.hdi-container
+    properties:
+      hdi-container-name: '${service-name}'
+  - name: Workflow_OrgChart-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service-plan: application
+      service: xsuaa
+      config:
+        xsappname: 'Workflow_OrgChart-${space}'
+        tenant-mode: dedicated
+  - name: portal_resources_Workflow_OrgChart
+    parameters:
+      service-plan: standard
+      service: portal
+    type: org.cloudfoundry.managed-service
+  - name: Workflow_OrgChart_CFDest
+    parameters:
+      service-plan: lite
+      service: destination
+    type: org.cloudfoundry.managed-service

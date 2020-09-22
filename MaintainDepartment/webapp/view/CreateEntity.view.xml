@@ -1,0 +1,36 @@
+<mvc:View controllerName="saptw.MaintainDepartment.controller.CreateEntity" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form"
+	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:l="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic"
+	xmlns:smart="sap.ui.comp.smartfield" xmlns="sap.m">
+	<semantic:DetailPage id="page" navButtonPress="onNavBack" title="{viewModel>/viewTitle}" busy="{viewModel>/busy}">
+		<semantic:content>
+			<f:SimpleForm class="editableForm" columnsL="1" columnsM="1" editable="true" emptySpanL="4" emptySpanM="4" id="newEntitySimpleForm"
+				labelSpanL="3" labelSpanM="3" layout="ResponsiveGridLayout" maxContainerCols="2" minWidth="1024"
+				title="{= ${viewModel>/mode} === 'edit'? 'Edit CatalogService.Department': 'New CatalogService.Department'}">
+				<f:content>
+					<Label text="departmentId" required="true"/>
+					<Input name="departmentId" id="departmentId_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement"
+						enabled="{= ${viewModel>/mode} === 'edit'? false: true}" visible="true"
+						value="{ path: 'departmentId', type: 'sap.ui.model.odata.type.Int32' , constraints:{ nullable:false } }"/>
+					<Label text="description" required="false"/>
+					<Input name="description" id="description_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" enabled="true" visible="true"
+						value="{ path: 'description', type: 'sap.ui.model.odata.type.String' }"/>
+					<Label text="division" required="false"/>
+					<Input name="division" id="division_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" enabled="true" visible="true"
+						value="{ path: 'division', type: 'sap.ui.model.odata.type.String' }"/>
+					<Label text="region" required="false"/>
+					<Input name="region" id="region_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" enabled="true" visible="true"
+						value="{ path: 'region', type: 'sap.ui.model.odata.type.String' }"/>
+					<Label text="country_countryId" required="false"/>
+					<Input name="country_countryId" id="country_countryId_id" valueLiveUpdate="true" liveChange="_validateSaveEnablement" enabled="true"
+						visible="true" value="{ path: 'country_countryId', type: 'sap.ui.model.odata.type.Int32' }"/>
+				</f:content>
+			</f:SimpleForm>
+		</semantic:content>
+		<semantic:saveAction>
+			<semantic:SaveAction id="save" enabled="{viewModel>/enableCreate}" press="onSave"/>
+		</semantic:saveAction>
+		<semantic:cancelAction>
+			<semantic:CancelAction id="cancel" press="onCancel"></semantic:CancelAction>
+		</semantic:cancelAction>
+	</semantic:DetailPage>
+</mvc:View>

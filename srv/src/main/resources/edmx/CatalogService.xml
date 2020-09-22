@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+  <edmx:DataServices m:DataServiceVersion="2.0">
+    <Schema Namespace="CatalogService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="Country" EntityType="CatalogService.Country"/>
+        <EntitySet Name="Department" EntityType="CatalogService.Department"/>
+        <EntitySet Name="Employee" EntityType="CatalogService.Employee"/>
+        <EntitySet Name="Survey" EntityType="CatalogService.Survey"/>
+        <EntitySet Name="Temperature" EntityType="CatalogService.Temperature"/>
+        <EntitySet Name="productionReport" EntityType="CatalogService.productionReport"/>
+        <AssociationSet Name="Department_country" Association="CatalogService.Department_country">
+          <End Role="Department" EntitySet="Department"/>
+          <End Role="Country" EntitySet="Country"/>
+        </AssociationSet>
+        <AssociationSet Name="Employee_departmentId" Association="CatalogService.Employee_departmentId">
+          <End Role="Employee" EntitySet="Employee"/>
+          <End Role="Department" EntitySet="Department"/>
+        </AssociationSet>
+      </EntityContainer>
+      <EntityType Name="Country">
+        <Key>
+          <PropertyRef Name="countryId"/>
+        </Key>
+        <Property Name="countryId" Type="Edm.Int32" Nullable="false"/>
+        <NavigationProperty Name="countries" Relationship="CatalogService.Department_country" FromRole="Country" ToRole="Department"/>
+        <Property Name="countryName" Type="Edm.String"/>
+        <Property Name="currency" Type="Edm.String"/>
+        <Property Name="region" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="Department">
+        <Key>
+          <PropertyRef Name="departmentId"/>
+        </Key>
+        <Property Name="departmentId" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="description" Type="Edm.String"/>
+        <Property Name="division" Type="Edm.String"/>
+        <Property Name="region" Type="Edm.String"/>
+        <NavigationProperty Name="country" Relationship="CatalogService.Department_country" FromRole="Department" ToRole="Country"/>
+        <NavigationProperty Name="Employees" Relationship="CatalogService.Employee_departmentId" FromRole="Department" ToRole="Employee"/>
+        <Property Name="country_countryId" Type="Edm.Int32"/>
+      </EntityType>
+      <EntityType Name="Employee">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="description" Type="Edm.String"/>
+        <NavigationProperty Name="departmentId" Relationship="CatalogService.Employee_departmentId" FromRole="Employee" ToRole="Department"/>
+        <Property Name="region" Type="Edm.String"/>
+        <Property Name="country" Type="Edm.String"/>
+        <Property Name="location" Type="Edm.String"/>
+        <Property Name="email" Type="Edm.String"/>
+        <Property Name="managerId" Type="Edm.Int32"/>
+        <Property Name="jobTitle" Type="Edm.String"/>
+        <Property Name="jobRole" Type="Edm.String"/>
+        <Property Name="departmentId_departmentId" Type="Edm.Int32"/>
+      </EntityType>
+      <EntityType Name="Survey">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="email" Type="Edm.String"/>
+        <Property Name="department" Type="Edm.String"/>
+        <Property Name="submitDate" Type="Edm.DateTime" sap:display-format="Date"/>
+        <Property Name="statusA" Type="Edm.Boolean"/>
+        <Property Name="statusB" Type="Edm.Boolean"/>
+        <Property Name="statusC" Type="Edm.Boolean"/>
+        <Property Name="statusD" Type="Edm.Boolean"/>
+        <Property Name="statusBComment" Type="Edm.String"/>
+        <Property Name="statusD_Train" Type="Edm.Boolean"/>
+        <Property Name="statusD_TrainNumber" Type="Edm.String"/>
+        <Property Name="statusD_HSR" Type="Edm.Boolean"/>
+        <Property Name="statusD_HSRNumber" Type="Edm.Int32"/>
+        <Property Name="statusD_MRT" Type="Edm.Boolean"/>
+        <Property Name="statusD_MRT_start" Type="Edm.String"/>
+        <Property Name="statusD_MRT_end" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="Temperature">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="email" Type="Edm.String"/>
+        <Property Name="department" Type="Edm.String"/>
+        <Property Name="submitDate" Type="Edm.DateTime" sap:display-format="Date"/>
+        <Property Name="foreheadTemp" Type="Edm.Boolean"/>
+        <Property Name="earTemp" Type="Edm.Boolean"/>
+        <Property Name="armTemp" Type="Edm.Boolean"/>
+        <Property Name="temperature" Type="Edm.Decimal" Scale="1" Precision="3"/>
+      </EntityType>
+      <EntityType Name="productionReport">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="workorderid" Type="Edm.String"/>
+        <Property Name="operation" Type="Edm.String"/>
+        <Property Name="email" Type="Edm.String"/>
+        <Property Name="department" Type="Edm.String"/>
+        <Property Name="workstation" Type="Edm.String"/>
+        <Property Name="workProcess" Type="Edm.String"/>
+        <Property Name="submitDate" Type="Edm.DateTimeOffset"/>
+        <Property Name="duration" Type="Edm.Time"/>
+        <Property Name="material" Type="Edm.String"/>
+        <Property Name="piece" Type="Edm.Int32"/>
+      </EntityType>
+      <Association Name="Department_country">
+        <End Role="Department" Type="CatalogService.Department" Multiplicity="*">
+          <OnDelete Action="Cascade"/>
+        </End>
+        <End Role="Country" Type="CatalogService.Country" Multiplicity="0..1"/>
+        <ReferentialConstraint>
+          <Principal Role="Country">
+            <PropertyRef Name="countryId"/>
+          </Principal>
+          <Dependent Role="Department">
+            <PropertyRef Name="country_countryId"/>
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Employee_departmentId">
+        <End Role="Employee" Type="CatalogService.Employee" Multiplicity="*">
+          <OnDelete Action="Cascade"/>
+        </End>
+        <End Role="Department" Type="CatalogService.Department" Multiplicity="0..1"/>
+        <ReferentialConstraint>
+          <Principal Role="Department">
+            <PropertyRef Name="departmentId"/>
+          </Principal>
+          <Dependent Role="Employee">
+            <PropertyRef Name="departmentId_departmentId"/>
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,738 @@
+{
+  "namespace": "workflow.orglevel",
+  "definitions": {
+    "CatalogService": {
+      "@source": "srv/cat-service.cds",
+      "kind": "service"
+    },
+    "CatalogService.Country": {
+      "kind": "entity",
+      "@cds.persistence.name": "CATALOGSERVICE_COUNTRY",
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "workflow.orglevel.Country"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "countryId": {
+          "@cds.persistence.name": "COUNTRYID",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "countries": {
+          "@cds.persistence.name": "COUNTRIES",
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "CatalogService.Department",
+          "on": [
+            {
+              "ref": [
+                "countries",
+                "country"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "countryName": {
+          "@cds.persistence.name": "COUNTRYNAME",
+          "type": "cds.String"
+        },
+        "currency": {
+          "@cds.persistence.name": "CURRENCY",
+          "type": "cds.String"
+        },
+        "region": {
+          "@cds.persistence.name": "REGION",
+          "type": "cds.String"
+        }
+      },
+      "$syntax": "projection"
+    },
+    "CatalogService.Department": {
+      "kind": "entity",
+      "@cds.persistence.name": "CATALOGSERVICE_DEPARTMENT",
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "workflow.orglevel.Department"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "departmentId": {
+          "@cds.persistence.name": "DEPARTMENTID",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "description": {
+          "@cds.persistence.name": "DESCRIPTION",
+          "type": "cds.String"
+        },
+        "division": {
+          "@cds.persistence.name": "DIVISION",
+          "type": "cds.String"
+        },
+        "region": {
+          "@cds.persistence.name": "REGION",
+          "type": "cds.String"
+        },
+        "country": {
+          "@cds.persistence.name": "COUNTRY",
+          "type": "cds.Association",
+          "target": "CatalogService.Country",
+          "keys": [
+            {
+              "ref": [
+                "countryId"
+              ],
+              "$generatedFieldName": "country_countryId"
+            }
+          ]
+        },
+        "Employees": {
+          "@cds.persistence.name": "EMPLOYEES",
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "CatalogService.Employee",
+          "on": [
+            {
+              "ref": [
+                "Employees",
+                "departmentId"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "country_countryId": {
+          "@cds.persistence.name": "COUNTRY_COUNTRYID",
+          "@odata.foreignKey4": "country",
+          "type": "cds.Integer"
+        }
+      },
+      "$syntax": "projection"
+    },
+    "CatalogService.Employee": {
+      "kind": "entity",
+      "@cds.persistence.name": "CATALOGSERVICE_EMPLOYEE",
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "workflow.orglevel.Employee"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "description": {
+          "@cds.persistence.name": "DESCRIPTION",
+          "type": "cds.String"
+        },
+        "departmentId": {
+          "@cds.persistence.name": "DEPARTMENTID",
+          "type": "cds.Association",
+          "target": "CatalogService.Department",
+          "keys": [
+            {
+              "ref": [
+                "departmentId"
+              ],
+              "$generatedFieldName": "departmentId_departmentId"
+            }
+          ]
+        },
+        "region": {
+          "@cds.persistence.name": "REGION",
+          "type": "cds.String"
+        },
+        "country": {
+          "@cds.persistence.name": "COUNTRY",
+          "type": "cds.String"
+        },
+        "location": {
+          "@cds.persistence.name": "LOCATION",
+          "type": "cds.String"
+        },
+        "email": {
+          "@cds.persistence.name": "EMAIL",
+          "type": "cds.String"
+        },
+        "managerId": {
+          "@cds.persistence.name": "MANAGERID",
+          "type": "cds.Integer"
+        },
+        "jobTitle": {
+          "@cds.persistence.name": "JOBTITLE",
+          "type": "cds.String"
+        },
+        "jobRole": {
+          "@cds.persistence.name": "JOBROLE",
+          "type": "cds.String"
+        },
+        "departmentId_departmentId": {
+          "@cds.persistence.name": "DEPARTMENTID_DEPARTMENTID",
+          "@odata.foreignKey4": "departmentId",
+          "type": "cds.Integer"
+        }
+      },
+      "$syntax": "projection"
+    },
+    "CatalogService.Survey": {
+      "kind": "entity",
+      "@cds.persistence.name": "CATALOGSERVICE_SURVEY",
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "workflow.orglevel.Survey"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "email": {
+          "@cds.persistence.name": "EMAIL",
+          "type": "cds.String"
+        },
+        "department": {
+          "@cds.persistence.name": "DEPARTMENT",
+          "type": "cds.String"
+        },
+        "submitDate": {
+          "@cds.persistence.name": "SUBMITDATE",
+          "type": "cds.Date"
+        },
+        "statusA": {
+          "@cds.persistence.name": "STATUSA",
+          "type": "cds.Boolean"
+        },
+        "statusB": {
+          "@cds.persistence.name": "STATUSB",
+          "type": "cds.Boolean"
+        },
+        "statusC": {
+          "@cds.persistence.name": "STATUSC",
+          "type": "cds.Boolean"
+        },
+        "statusD": {
+          "@cds.persistence.name": "STATUSD",
+          "type": "cds.Boolean"
+        },
+        "statusBComment": {
+          "@cds.persistence.name": "STATUSBCOMMENT",
+          "type": "cds.String"
+        },
+        "statusD_Train": {
+          "@cds.persistence.name": "STATUSD_TRAIN",
+          "type": "cds.Boolean"
+        },
+        "statusD_TrainNumber": {
+          "@cds.persistence.name": "STATUSD_TRAINNUMBER",
+          "type": "cds.String"
+        },
+        "statusD_HSR": {
+          "@cds.persistence.name": "STATUSD_HSR",
+          "type": "cds.Boolean"
+        },
+        "statusD_HSRNumber": {
+          "@cds.persistence.name": "STATUSD_HSRNUMBER",
+          "type": "cds.Integer"
+        },
+        "statusD_MRT": {
+          "@cds.persistence.name": "STATUSD_MRT",
+          "type": "cds.Boolean"
+        },
+        "statusD_MRT_start": {
+          "@cds.persistence.name": "STATUSD_MRT_START",
+          "type": "cds.String"
+        },
+        "statusD_MRT_end": {
+          "@cds.persistence.name": "STATUSD_MRT_END",
+          "type": "cds.String"
+        }
+      },
+      "$syntax": "projection"
+    },
+    "CatalogService.Temperature": {
+      "kind": "entity",
+      "@cds.persistence.name": "CATALOGSERVICE_TEMPERATURE",
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "workflow.orglevel.Temperature"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "email": {
+          "@cds.persistence.name": "EMAIL",
+          "type": "cds.String"
+        },
+        "department": {
+          "@cds.persistence.name": "DEPARTMENT",
+          "type": "cds.String"
+        },
+        "submitDate": {
+          "@cds.persistence.name": "SUBMITDATE",
+          "type": "cds.Date"
+        },
+        "foreheadTemp": {
+          "@cds.persistence.name": "FOREHEADTEMP",
+          "type": "cds.Boolean"
+        },
+        "earTemp": {
+          "@cds.persistence.name": "EARTEMP",
+          "type": "cds.Boolean"
+        },
+        "armTemp": {
+          "@cds.persistence.name": "ARMTEMP",
+          "type": "cds.Boolean"
+        },
+        "temperature": {
+          "@cds.persistence.name": "TEMPERATURE",
+          "type": "cds.Decimal",
+          "precision": 3,
+          "scale": 1
+        }
+      },
+      "$syntax": "projection"
+    },
+    "CatalogService.productionReport": {
+      "kind": "entity",
+      "@cds.persistence.name": "CATALOGSERVICE_PRODUCTIONREPORT",
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "workflow.orglevel.productionReport"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "workorderid": {
+          "@cds.persistence.name": "WORKORDERID",
+          "type": "cds.String"
+        },
+        "operation": {
+          "@cds.persistence.name": "OPERATION",
+          "type": "cds.String"
+        },
+        "email": {
+          "@cds.persistence.name": "EMAIL",
+          "type": "cds.String"
+        },
+        "department": {
+          "@cds.persistence.name": "DEPARTMENT",
+          "type": "cds.String"
+        },
+        "workstation": {
+          "@cds.persistence.name": "WORKSTATION",
+          "type": "cds.String"
+        },
+        "workProcess": {
+          "@cds.persistence.name": "WORKPROCESS",
+          "type": "cds.String"
+        },
+        "submitDate": {
+          "@cds.persistence.name": "SUBMITDATE",
+          "type": "cds.DateTime"
+        },
+        "duration": {
+          "@cds.persistence.name": "DURATION",
+          "type": "cds.Time"
+        },
+        "material": {
+          "@cds.persistence.name": "MATERIAL",
+          "type": "cds.String"
+        },
+        "piece": {
+          "@cds.persistence.name": "PIECE",
+          "type": "cds.Integer"
+        }
+      },
+      "$syntax": "projection"
+    },
+    "workflow.orglevel.Country": {
+      "kind": "entity",
+      "@cds.persistence.name": "WORKFLOW_ORGLEVEL_COUNTRY",
+      "elements": {
+        "countryId": {
+          "@cds.persistence.name": "COUNTRYID",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "countries": {
+          "@cds.persistence.name": "COUNTRIES",
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "workflow.orglevel.Department",
+          "on": [
+            {
+              "ref": [
+                "countries",
+                "country"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "countryName": {
+          "@cds.persistence.name": "COUNTRYNAME",
+          "type": "cds.String"
+        },
+        "currency": {
+          "@cds.persistence.name": "CURRENCY",
+          "type": "cds.String"
+        },
+        "region": {
+          "@cds.persistence.name": "REGION",
+          "type": "cds.String"
+        }
+      }
+    },
+    "workflow.orglevel.Department": {
+      "kind": "entity",
+      "@cds.persistence.name": "WORKFLOW_ORGLEVEL_DEPARTMENT",
+      "elements": {
+        "departmentId": {
+          "@cds.persistence.name": "DEPARTMENTID",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "description": {
+          "@cds.persistence.name": "DESCRIPTION",
+          "type": "cds.String"
+        },
+        "division": {
+          "@cds.persistence.name": "DIVISION",
+          "type": "cds.String"
+        },
+        "region": {
+          "@cds.persistence.name": "REGION",
+          "type": "cds.String"
+        },
+        "country": {
+          "@cds.persistence.name": "COUNTRY",
+          "type": "cds.Association",
+          "target": "workflow.orglevel.Country",
+          "keys": [
+            {
+              "ref": [
+                "countryId"
+              ],
+              "$generatedFieldName": "country_countryId"
+            }
+          ]
+        },
+        "Employees": {
+          "@cds.persistence.name": "EMPLOYEES",
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "workflow.orglevel.Employee",
+          "on": [
+            {
+              "ref": [
+                "Employees",
+                "departmentId"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "country_countryId": {
+          "@cds.persistence.name": "COUNTRY_COUNTRYID",
+          "@odata.foreignKey4": "country",
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "workflow.orglevel.Employee": {
+      "kind": "entity",
+      "@cds.persistence.name": "WORKFLOW_ORGLEVEL_EMPLOYEE",
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "description": {
+          "@cds.persistence.name": "DESCRIPTION",
+          "type": "cds.String"
+        },
+        "departmentId": {
+          "@cds.persistence.name": "DEPARTMENTID",
+          "type": "cds.Association",
+          "target": "workflow.orglevel.Department",
+          "keys": [
+            {
+              "ref": [
+                "departmentId"
+              ],
+              "$generatedFieldName": "departmentId_departmentId"
+            }
+          ]
+        },
+        "region": {
+          "@cds.persistence.name": "REGION",
+          "type": "cds.String"
+        },
+        "country": {
+          "@cds.persistence.name": "COUNTRY",
+          "type": "cds.String"
+        },
+        "location": {
+          "@cds.persistence.name": "LOCATION",
+          "type": "cds.String"
+        },
+        "email": {
+          "@cds.persistence.name": "EMAIL",
+          "type": "cds.String"
+        },
+        "managerId": {
+          "@cds.persistence.name": "MANAGERID",
+          "type": "cds.Integer"
+        },
+        "jobTitle": {
+          "@cds.persistence.name": "JOBTITLE",
+          "type": "cds.String"
+        },
+        "jobRole": {
+          "@cds.persistence.name": "JOBROLE",
+          "type": "cds.String"
+        },
+        "departmentId_departmentId": {
+          "@cds.persistence.name": "DEPARTMENTID_DEPARTMENTID",
+          "@odata.foreignKey4": "departmentId",
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "workflow.orglevel.Survey": {
+      "kind": "entity",
+      "@cds.persistence.name": "WORKFLOW_ORGLEVEL_SURVEY",
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "email": {
+          "@cds.persistence.name": "EMAIL",
+          "type": "cds.String"
+        },
+        "department": {
+          "@cds.persistence.name": "DEPARTMENT",
+          "type": "cds.String"
+        },
+        "submitDate": {
+          "@cds.persistence.name": "SUBMITDATE",
+          "type": "cds.Date"
+        },
+        "statusA": {
+          "@cds.persistence.name": "STATUSA",
+          "type": "cds.Boolean"
+        },
+        "statusB": {
+          "@cds.persistence.name": "STATUSB",
+          "type": "cds.Boolean"
+        },
+        "statusC": {
+          "@cds.persistence.name": "STATUSC",
+          "type": "cds.Boolean"
+        },
+        "statusD": {
+          "@cds.persistence.name": "STATUSD",
+          "type": "cds.Boolean"
+        },
+        "statusBComment": {
+          "@cds.persistence.name": "STATUSBCOMMENT",
+          "type": "cds.String"
+        },
+        "statusD_Train": {
+          "@cds.persistence.name": "STATUSD_TRAIN",
+          "type": "cds.Boolean"
+        },
+        "statusD_TrainNumber": {
+          "@cds.persistence.name": "STATUSD_TRAINNUMBER",
+          "type": "cds.String"
+        },
+        "statusD_HSR": {
+          "@cds.persistence.name": "STATUSD_HSR",
+          "type": "cds.Boolean"
+        },
+        "statusD_HSRNumber": {
+          "@cds.persistence.name": "STATUSD_HSRNUMBER",
+          "type": "cds.Integer"
+        },
+        "statusD_MRT": {
+          "@cds.persistence.name": "STATUSD_MRT",
+          "type": "cds.Boolean"
+        },
+        "statusD_MRT_start": {
+          "@cds.persistence.name": "STATUSD_MRT_START",
+          "type": "cds.String"
+        },
+        "statusD_MRT_end": {
+          "@cds.persistence.name": "STATUSD_MRT_END",
+          "type": "cds.String"
+        }
+      }
+    },
+    "workflow.orglevel.Temperature": {
+      "kind": "entity",
+      "@cds.persistence.name": "WORKFLOW_ORGLEVEL_TEMPERATURE",
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "email": {
+          "@cds.persistence.name": "EMAIL",
+          "type": "cds.String"
+        },
+        "department": {
+          "@cds.persistence.name": "DEPARTMENT",
+          "type": "cds.String"
+        },
+        "submitDate": {
+          "@cds.persistence.name": "SUBMITDATE",
+          "type": "cds.Date"
+        },
+        "foreheadTemp": {
+          "@cds.persistence.name": "FOREHEADTEMP",
+          "type": "cds.Boolean"
+        },
+        "earTemp": {
+          "@cds.persistence.name": "EARTEMP",
+          "type": "cds.Boolean"
+        },
+        "armTemp": {
+          "@cds.persistence.name": "ARMTEMP",
+          "type": "cds.Boolean"
+        },
+        "temperature": {
+          "@cds.persistence.name": "TEMPERATURE",
+          "type": "cds.Decimal",
+          "precision": 3,
+          "scale": 1
+        }
+      }
+    },
+    "workflow.orglevel.productionReport": {
+      "kind": "entity",
+      "@cds.persistence.name": "WORKFLOW_ORGLEVEL_PRODUCTIONREPORT",
+      "elements": {
+        "ID": {
+          "@cds.persistence.name": "ID",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "workorderid": {
+          "@cds.persistence.name": "WORKORDERID",
+          "type": "cds.String"
+        },
+        "operation": {
+          "@cds.persistence.name": "OPERATION",
+          "type": "cds.String"
+        },
+        "email": {
+          "@cds.persistence.name": "EMAIL",
+          "type": "cds.String"
+        },
+        "department": {
+          "@cds.persistence.name": "DEPARTMENT",
+          "type": "cds.String"
+        },
+        "workstation": {
+          "@cds.persistence.name": "WORKSTATION",
+          "type": "cds.String"
+        },
+        "workProcess": {
+          "@cds.persistence.name": "WORKPROCESS",
+          "type": "cds.String"
+        },
+        "submitDate": {
+          "@cds.persistence.name": "SUBMITDATE",
+          "type": "cds.DateTime"
+        },
+        "duration": {
+          "@cds.persistence.name": "DURATION",
+          "type": "cds.Time"
+        },
+        "material": {
+          "@cds.persistence.name": "MATERIAL",
+          "type": "cds.String"
+        },
+        "piece": {
+          "@cds.persistence.name": "PIECE",
+          "type": "cds.Integer"
+        }
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v1.26.2"
+  },
+  "$version": "1.0",
+  "@sql_mapping": "plain"
+}

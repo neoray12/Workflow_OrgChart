@@ -1,0 +1,24 @@
+{
+	"xsappname": "Workflow_OrgChart",
+	"tenant-mode": "dedicated",
+	"description": "Security profile of called application",
+
+	"scopes": [{
+		"name": "$XSAPPNAME.Display",
+		"description": "display"
+	}],
+
+	"role-templates": [{
+		"name": "Viewer",
+		"description": "Required to view things in our solution",
+		"scope-references": [
+			"$XSAPPNAME.Display"
+		]
+	}, {
+		"name": "Token_Exchange",
+		"description": "UAA",
+		"scope-references": [
+			"uaa.user"
+		]
+	}]
+}
